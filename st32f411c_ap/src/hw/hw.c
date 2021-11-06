@@ -15,8 +15,9 @@ bool hwInit(void)
 {
   bool ret = true;
 
-
   ret &= bspInit();
+
+  ret &= uartInit();
 
   ret &= cliInit();
   ret &= logInit();
@@ -37,8 +38,7 @@ bool hwInit(void)
 
   //ret &= usbInit();
   //ret &= usbBegin(USB_CDC_MODE);
-  //ret &= uartInit();
-  ret &= uartOpen(_DEF_UART1, 57600);
+  //ret &= uartOpen(_DEF_UART1, 115200);
   //ret &= canInit();
   //ret &= i2cInit();
 

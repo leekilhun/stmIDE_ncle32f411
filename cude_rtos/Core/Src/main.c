@@ -20,13 +20,15 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "dma.h"
+#include "rtc.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
-
+uint8_t rec_data;
+uint8_t rx_buf[256];
 /* Private function prototypes -----------------------------------------------*/
 #ifdef __GNUC__
   /* With GCC, small printf (option LD Linker->Libraries->Small printf
@@ -108,9 +110,13 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_DMA_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
   printf("\n\r UART Printf Example: retarget the C library printf function to the UART\n\r");
+
+  //HAL_UART_Receive_IT(&huart2, &rec_data, 1);
+  HAL_UART_Receive_DMA(&huart2,&rx_buf[0],256);
 
 
   /* USER CODE END 2 */
@@ -121,7 +127,7 @@ int main(void)
   while (1)
   {
     HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    HAL_Delay(1000);
+    HAL_Delay(1000*2);
     printf("Test\t: %ld\n\r",++num);
     /* USER CODE END WHILE */
 
@@ -146,14 +152,15 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 16;
-  RCC_OscInitStruct.PLL.PLLN = 336;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 100;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -168,13 +175,20 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
   {
     Error_Handler();
   }
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  /*HAL_UART_Transmit(&huart2, (uint8_t *)&rec_data, 1, 0xFFFF);
+  HAL_UART_Receive_IT(&huart2, &rec_data, 1);*/
+  //HAL_UART_Receive_DMA(&huart2,&rec_data,256);
+}
+
 
 /* USER CODE END 4 */
 
