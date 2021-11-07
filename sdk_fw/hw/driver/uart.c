@@ -83,7 +83,7 @@ bool uartOpen(uint8_t ch, uint32_t baud)
       {
         ret = true;
         uart_tbl[ch].is_open = true;
-#if 0
+#if 0 /*for interrupt receive data*/
         if (HAL_UART_Receive_IT(&huart2, (uint8_t *)&rx_data[_DEF_UART1], 1) != HAL_OK)
         {
           ret = false;
@@ -220,7 +220,7 @@ void DMA1_Stream5_IRQHandler(void)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-#if 0
+#if 0 /*for interrupt receive data*/
   if(huart->Instance==USART2)
   {
     qbufferWrite(&qbuffer[_DEF_UART1],(uint8_t*)&rx_data[_DEF_UART1],1);

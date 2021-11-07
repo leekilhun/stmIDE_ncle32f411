@@ -18,7 +18,7 @@ void apInit(void)
 {
   runTimer = tickTimer_Start();
   //uartOpen(_DEF_UART1, 115200);
-  cliOpen(_DEF_UART1, 115200);
+  cliOpen(_DEF_UART1, 57600);
   ledOff(_DEF_LED1);
 }
 

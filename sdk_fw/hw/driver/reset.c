@@ -72,13 +72,9 @@ uint32_t resetGetCount(void)
 void resetToBoot(uint32_t timeout)
 {
   if (timeout == 0)
-  {
     resetToRunBoot();
-  }
   else
-  {
     run_timeout_count = timeout;
-  }
 }
 
 void resetToSysBoot(void)

@@ -22,15 +22,13 @@ bool rtcInit(void)
 {
   bool ret = true;
 
-
-
-  hrtc.Instance = RTC;
-  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
-  hrtc.Init.AsynchPrediv = 127;
-  hrtc.Init.SynchPrediv = 255;
-  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
-  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  hrtc.Instance             = RTC;
+  hrtc.Init.HourFormat      = RTC_HOURFORMAT_24;
+  hrtc.Init.AsynchPrediv    = 127;
+  hrtc.Init.SynchPrediv     = 255;
+  hrtc.Init.OutPut          = RTC_OUTPUT_DISABLE;
+  hrtc.Init.OutPutPolarity  = RTC_OUTPUT_POLARITY_HIGH;
+  hrtc.Init.OutPutType      = RTC_OUTPUT_TYPE_OPENDRAIN;
   if (HAL_RTC_Init(&hrtc) != HAL_OK)
   {
     ret = false;
@@ -48,8 +46,6 @@ void rtcBackupRegWrite(uint32_t index, uint32_t data)
 {
   HAL_RTCEx_BKUPWrite(&hrtc, index, data);
 }
-
-
 
 
 void HAL_RTC_MspInit(RTC_HandleTypeDef* rtcHandle)

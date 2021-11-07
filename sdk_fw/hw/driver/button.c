@@ -24,7 +24,7 @@ typedef struct
 
 button_tbl_t button_tbl[BUTTON_MAX_CH] =
     {
-        {GPIOA, GPIO_PIN_0, GPIO_PIN_RESET},
+        {GPIOC, GPIO_PIN_13, GPIO_PIN_RESET},
     };
 
 
@@ -39,11 +39,11 @@ bool buttonInit(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
 
-  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
 
 
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
 
   for (int i=0; i<BUTTON_MAX_CH; i++)
   {
@@ -78,6 +78,7 @@ bool buttonGetPressed(uint8_t ch)
 
 
 
+#ifdef _USE_HW_CLI
 
 void cliButton(cli_args_t *args)
 {
@@ -92,7 +93,8 @@ void cliButton(cli_args_t *args)
       {
         cliPrintf("%d", buttonGetPressed(i));
       }
-      cliPrintf("\n");
+      cliPrintf("\r\n");
+      cliPrintf("\x1B[%dA", 1);
 
       delay(100);
     }
@@ -106,6 +108,8 @@ void cliButton(cli_args_t *args)
     cliPrintf("button show\n");
   }
 }
+
+#endif
 
 
 #endif

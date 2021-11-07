@@ -14,14 +14,11 @@
 #include "rtc.h"
 #include "reset.h"
 #include "button.h"
-//#include "cdc.h"
-//#include "usb.h"
 #include "uart.h"
-#include "cli.h"
-//#include "can.h"
-//#include "i2c.h"
-#include "log.h"
 #include "flash.h"
+#include "cmd.h"
+#include "cli.h"
+#include "ymodem.h"
 
 bool hwInit(void);
 
