@@ -28,15 +28,18 @@
 #define _USE_HW_UART
 #define      HW_UART_MAX_CH         1
 
-#define _USE_HW_YMODEM
-//#define _USE_HW_CMD
+//#define _USE_HW_YMODEM
+#define _USE_HW_CMD
 #define      HW_CMD_MAX_DATA_LENGTH (1024)
 
 
-#define FLASH_ADDR_FW               0x8010000
+#define FLASH_ADDR_TAG              0x8010000
+#define FLASH_ADDR_FW               0x8010400
+#define FLASH_ADDR_FW_VER           0x8010800
 
 #define FLASH_ADDR_START            0x8010000
 #define FLASH_ADDR_END              (FLASH_ADDR_START + (512-64)*1024)
+
 
 
 

@@ -30,7 +30,7 @@ bool addTagToBin(char *src_filename, char *dst_filename);
 
 void apInit(void)
 {
-  logPrintf("stm32cli V210213R1\n\n");
+  logPrintf("stm32cli V211111R1\n\n");
 
   cliOpen(_DEF_UART1, 57600);
 }

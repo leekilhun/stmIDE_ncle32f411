@@ -5,9 +5,15 @@
  *      Author: gns2l
  */
 
-
-
 #include "hw.h"
+
+__attribute__((section(".version"))) firm_version_t boot_ver =
+    {
+        "B211111R1",
+        "Bootloader"
+    };
+
+
 
 bool hwInit(void)
 {
@@ -24,7 +30,6 @@ bool hwInit(void)
   ret &= buttonInit();
   ret &= ledInit();
   ret &= flashInit();
-  ret &= ymodemInit();
 
 
   return ret;

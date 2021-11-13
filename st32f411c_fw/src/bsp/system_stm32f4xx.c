@@ -158,6 +158,8 @@ const uint8_t APBPrescTable[8]  = {0, 0, 0, 0, 1, 2, 3, 4};
   * @{
   */
 
+  extern uint32_t __isr_vector_addr;
+
 /**
   * @brief  Setup the microcontroller system
   *         Initialize the FPU setting, vector table location and External memory 
@@ -178,7 +180,8 @@ void SystemInit(void)
 
   /* Configure the Vector Table location -------------------------------------*/
 #if defined(USER_VECT_TAB_ADDRESS)
-  SCB->VTOR = VECT_TAB_BASE_ADDRESS | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM */
+  //SCB->VTOR = VECT_TAB_BASE_ADDRESS | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM */
+  SCB->VTOR = (uint32_t)&__isr_vector_addr;
 #endif /* USER_VECT_TAB_ADDRESS */
 }
 

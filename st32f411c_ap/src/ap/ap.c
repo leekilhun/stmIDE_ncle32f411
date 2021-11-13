@@ -18,7 +18,7 @@ void apInit(void)
 {
   runTimer = tickTimer_Start();
   //uartOpen(_DEF_UART1, 115200);
-  cliOpen(_DEF_UART1, 115200);
+  cliOpen(_DEF_UART1, 57600);
   ledOff(_DEF_LED1);
 }
 
@@ -26,7 +26,7 @@ void apMain(void)
 {
   while(1)
   {
-    if (tickTimer_MoreThan(runTimer, 100))
+    if (tickTimer_MoreThan(runTimer, 1000))
     {
       ledToggle(_DEF_LED1);
       runTimer = tickTimer_Start();

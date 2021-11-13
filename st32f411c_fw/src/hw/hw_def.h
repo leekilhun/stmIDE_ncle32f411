@@ -51,6 +51,7 @@
 #define      HW_I2C_MAX_CH          1
 
 
+#define FLASH_ADDR_BOOT_VER         0x8000400
 
 
 #endif /* SRC_HW_HW_DEF_H_ */
