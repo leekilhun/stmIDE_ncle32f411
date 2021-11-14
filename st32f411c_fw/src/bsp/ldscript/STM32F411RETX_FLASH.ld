@@ -48,7 +48,7 @@ MEMORY
   RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 128K
   
   TAG    (RX)     : ORIGIN = 0x08010000,   LENGTH = 1K
-  FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 447K
+  FLASH  (rx)     : ORIGIN = 0x08010400,   LENGTH = 447K
 }
 
 /* Sections */
