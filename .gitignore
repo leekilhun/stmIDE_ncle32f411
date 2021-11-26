@@ -11,7 +11,7 @@
 *.chm
 *.cproject
 *.project
-
+*.fw
 
 ## 폴더 무시
 .vscode/

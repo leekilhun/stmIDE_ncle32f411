@@ -55,6 +55,7 @@ void apInit(void)
 void apMain(void)
 {
   uint32_t pre_time;
+  uint8_t rx_data;
 
 
   pre_time = millis();
@@ -65,8 +66,13 @@ void apMain(void)
       pre_time = millis();
       ledToggle(_DEF_LED1);
     }
-
+    /*if (uartAvailable(_DEF_UART1) > 0)
+    {
+      rx_data = uartRead(_DEF_UART1);
+      uartPrintf(_DEF_UART1, "Uart2 Rx %c %x\n",rx_data,rx_data);
+    }*/
     //cliMain();
+
     if (cmdReceivePacket(&cmd) == true)
     {
       bootProcessCmd(&cmd);
