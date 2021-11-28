@@ -10,4 +10,28 @@
 
 
 
+#include "module.h"
+
+
+void moduleInit(void)
+{
+
+  if (mcp2515Init() != true)
+  {
+    Error_Handler();
+  }
+
+  if (mcp23017Init() != true)
+  {
+    Error_Handler();
+  }
+
+  if (lcdInit() != true)
+  {
+    Error_Handler();
+  }
+
+
+}
+
 #endif /* SRC_MODULE_MODULE_C_ */

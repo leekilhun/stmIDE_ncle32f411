@@ -131,5 +131,4 @@ void     canDetachRxInterrupt(uint8_t ch);
 #endif
 
 
-
 #endif /* SRC_COMMON_INC_HW_CAN_H_ */

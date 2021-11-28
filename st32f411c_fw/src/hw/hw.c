@@ -47,12 +47,16 @@ bool hwInit(void)
   ret &= resetInit();
   ret &= cliInit();
   ret &= ledInit();
-
+  ret &= gpioInit();
   ret &= uartInit();
 
   ret &= logInit();
   ret &= buttonInit();
   ret &= flashInit();
+
+  ret &= spiInit();
+  ret &= i2cInit();
+  ret &= canInit();
 
   return ret;
 }

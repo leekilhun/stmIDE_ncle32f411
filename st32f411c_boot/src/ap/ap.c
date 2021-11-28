@@ -55,7 +55,7 @@ void apInit(void)
 void apMain(void)
 {
   uint32_t pre_time;
-  uint8_t rx_data;
+  //uint8_t rx_data;
 
 
   pre_time = millis();

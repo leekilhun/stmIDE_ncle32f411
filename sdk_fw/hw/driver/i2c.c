@@ -5,14 +5,8 @@
  *      Author: gns2l
  */
 
-
-
-
 #include "i2c.h"
 #include "cli.h"
-
-
-
 
 
 #ifdef _USE_HW_I2C
@@ -44,6 +38,8 @@ static const osMutexDef_t mutex_lock_def[I2C_MAX_CH];
 
 
 I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef hi2c2;
+
 
 typedef struct
 {
@@ -58,13 +54,14 @@ typedef struct
 
 static i2c_tbl_t i2c_tbl[I2C_MAX_CH] =
     {
-        { &hi2c1, GPIOA, GPIO_PIN_15,  GPIOB, GPIO_PIN_7},
+        { &hi2c1, GPIOB, GPIO_PIN_6,  GPIOB, GPIO_PIN_7},
+        { &hi2c2, GPIOB, GPIO_PIN_10,  GPIOB, GPIO_PIN_9},
     };
 
 static const uint32_t i2c_freq_tbl[] =
     {
-        0x30909DEC, // 100Khz
-        0x00F07BFF, // 400Khz
+        0x000186A0, // 100Khz
+        0x00061A80, // 400Khz0x61a80
     };
 
 static void delayUs(uint32_t us);
@@ -98,7 +95,7 @@ bool i2cIsInit(void)
   return is_init;
 }
 
-bool i2cOpen(uint8_t ch, i2c_freq_t freq_khz)
+bool i2cBegin(uint8_t ch, i2c_freq_t freq_khz)
 {
   bool ret = false;
 
@@ -117,7 +114,7 @@ bool i2cOpen(uint8_t ch, i2c_freq_t freq_khz)
       is_open[ch] = false;
 
       p_handle->Instance             = I2C1;
-      p_handle->Init.Timing          = i2c_freq_tbl[freq_khz];
+      p_handle->Init.ClockSpeed      = i2c_freq_tbl[freq_khz];
       p_handle->Init.OwnAddress1     = 0x00;
       p_handle->Init.AddressingMode  = I2C_ADDRESSINGMODE_7BIT;
       p_handle->Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -140,6 +137,35 @@ bool i2cOpen(uint8_t ch, i2c_freq_t freq_khz)
         is_open[ch] = true;
       }
       break;
+
+    case _DEF_I2C2:
+          i2c_freq[ch] = freq_khz;
+          is_open[ch] = false;
+
+          p_handle->Instance             = I2C2;
+          p_handle->Init.ClockSpeed      = i2c_freq_tbl[freq_khz];
+          p_handle->Init.OwnAddress1     = 0x00;
+          p_handle->Init.AddressingMode  = I2C_ADDRESSINGMODE_7BIT;
+          p_handle->Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+          p_handle->Init.OwnAddress2     = 0x00;
+          p_handle->Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+          p_handle->Init.NoStretchMode   = I2C_NOSTRETCH_DISABLE;
+
+          i2cReset(ch);
+
+          HAL_I2C_DeInit(p_handle);
+          if(HAL_I2C_Init(p_handle) == HAL_OK)
+          {
+            /* Enable the Analog I2C Filter */
+            HAL_I2CEx_ConfigAnalogFilter(p_handle,I2C_ANALOGFILTER_ENABLE);
+
+            /* Configure Digital filter */
+            HAL_I2CEx_ConfigDigitalFilter(p_handle, 0);
+
+            ret = true;
+            is_open[ch] = true;
+          }
+          break;
   }
 
   return ret;
@@ -159,7 +185,7 @@ void i2cReset(uint8_t ch)
   GPIO_InitStruct.Pin       = p_pin->scl_pin;
   GPIO_InitStruct.Mode      = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull      = GPIO_NOPULL;
-  GPIO_InitStruct.Speed     = GPIO_SPEED_HIGH;
+  GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(p_pin->scl_port, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin       = p_pin->sda_pin;
@@ -212,7 +238,7 @@ bool i2cRecovery(uint8_t ch)
 
   i2cReset(ch);
 
-  ret = i2cOpen(ch, i2c_freq[ch]);
+  ret = i2cBegin(ch, i2c_freq[ch]);
 
   return ret;
 }
@@ -434,6 +460,14 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
       i2c_errcount[_DEF_I2C1]++;
     }
   }
+  else if (hi2c->Instance == i2c_tbl[_DEF_I2C2].p_hi2c->Instance)
+  {
+    if (hi2c->ErrorCode > 0)
+    {
+      i2c_errcount[_DEF_I2C2]++;
+    }
+  }
+
 }
 
 void I2C1_ER_IRQHandler(void)
@@ -449,20 +483,13 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     /**I2C1 GPIO Configuration
-    PA15     ------> I2C1_SCL
+    PB6     ------> I2C1_SCL
     PB7     ------> I2C1_SDA
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_15;
+    GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = GPIO_PIN_7;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -473,6 +500,36 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
     HAL_NVIC_SetPriority(I2C1_ER_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
   }
+  else if(i2cHandle->Instance==I2C2)
+  {
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    /**I2C2 GPIO Configuration
+        PB10     ------> I2C2_SCL
+        PB9     ------> I2C2_SDA
+     */
+    GPIO_InitStruct.Pin = GPIO_PIN_10;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF4_I2C2;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_9;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF9_I2C2;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    /* I2C2 clock enable */
+    __HAL_RCC_I2C2_CLK_ENABLE();
+
+    /* I2C2 interrupt Init */
+    HAL_NVIC_SetPriority(I2C2_EV_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(I2C2_EV_IRQn);
+
+  }
+
 }
 
 void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
@@ -484,15 +541,31 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
     __HAL_RCC_I2C1_CLK_DISABLE();
 
     /**I2C1 GPIO Configuration
-    PA15     ------> I2C1_SCL
-    PB7     ------> I2C1_SDA
-    */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_15);
+        PB6     ------> I2C1_SCL
+        PB7     ------> I2C1_SDA
+     */
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_6);
 
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_7);
 
     /* I2C1 interrupt Deinit */
     HAL_NVIC_DisableIRQ(I2C1_ER_IRQn);
+
+  }
+  else if(i2cHandle->Instance==I2C2)
+  {
+    __HAL_RCC_I2C2_CLK_DISABLE();
+
+    /**I2C2 GPIO Configuration
+        PB10     ------> I2C2_SCL
+        PB9     ------> I2C2_SDA
+     */
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_10);
+
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_9);
+
+    /* I2C2 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(I2C2_EV_IRQn);
   }
 }
 
@@ -533,7 +606,7 @@ void cliI2C(cli_args_t *args)
     }
     else if(args->isStr(0, "open") == true)
     {
-      i2c_ret = i2cOpen(print_ch, I2C_FREQ_400KHz);
+      i2c_ret = i2cBegin(print_ch, I2C_FREQ_400KHz);
       if (i2c_ret == true)
       {
         cliPrintf("I2C CH%d Open OK\n", print_ch + 1);

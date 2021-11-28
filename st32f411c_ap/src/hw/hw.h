@@ -18,10 +18,12 @@
 //#include "usb.h"
 #include "uart.h"
 #include "cli.h"
-//#include "can.h"
-//#include "i2c.h"
+#include "can.h"
+#include "i2c.h"
+#include "spi.h"
 #include "log.h"
 #include "flash.h"
+#include "gpio.h"
 
 bool hwInit(void);
 

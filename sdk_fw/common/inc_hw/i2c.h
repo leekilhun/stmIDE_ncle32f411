@@ -25,7 +25,7 @@ typedef enum
 
 bool i2cInit(void);
 bool i2cIsInit(void);
-bool i2cOpen(uint8_t ch, i2c_freq_t freq_khz);
+bool i2cBegin(uint8_t ch, i2c_freq_t freq_khz);
 bool i2cIsOpen(uint8_t ch);
 void i2cReset(uint8_t ch);
 bool i2cIsDeviceReady(uint8_t ch, uint8_t dev_addr);

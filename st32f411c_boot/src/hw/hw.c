@@ -27,6 +27,24 @@ bool hwInit(void)
   ret &= uartInit();
   ret &= cliInit();
 
+  //if (resetGetCount() == 2)
+  //{
+  // resetToSysBoot();
+  //}
+
+  //logPrintf("[ Firmware Begin... ]\r\n");
+  //logPrintf("Booting..Name \t\t: %s\r\n", _DEF_BOARD_NAME);
+  //logPrintf("Booting..Ver  \t\t: %s\r\n", _DEF_FIRMWATRE_VERSION);
+
+
+  //ret &= usbInit();
+  //ret &= usbBegin(USB_CDC_MODE);
+  //ret &= uartOpen(_DEF_UART1, 115200);
+  //ret &= canInit();
+  //ret &= i2cInit();
+
+  //logBoot(false);
+
   ret &= buttonInit();
   ret &= ledInit();
   ret &= flashInit();

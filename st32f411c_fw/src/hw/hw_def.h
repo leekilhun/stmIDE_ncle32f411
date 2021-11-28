@@ -24,6 +24,15 @@
 #define _USE_HW_BUTTON
 #define      HW_BUTTON_MAX_CH       1
 
+
+#define _USE_HW_GPIO
+#define      HW_GPIO_MAX_CH         5
+#define        _GPIO_CAN_INTERRUP   0
+#define        _GPIO_CAN_CS         1
+#define        _GPIO_EX_IO_RST      2
+#define        _GPIO_EX_IO_IRT_A    3
+#define        _GPIO_EX_IO_IRT_B    4
+
 //#define _USE_HW_CDC
 //#define _USE_HW_USB
 #define      HW_USE_CDC             1
@@ -43,11 +52,15 @@
 #define      HW_CLI_LINE_HIS_MAX    4
 #define      HW_CLI_LINE_BUF_MAX    64
 
-//#define _USE_HW_CAN
+#define _USE_HW_CAN
 #define      HW_CAN_MAX_CH          1
 #define      HW_CAN_MSG_RX_BUF_MAX  16
 
-//#define _USE_HW_I2C
+#define _USE_HW_SPI
+#define      HW_SPI_MAX_CH          1
+#define        _SPI_CAN             _DEF_SPI1
+
+#define _USE_HW_I2C
 #define      HW_I2C_MAX_CH          1
 
 

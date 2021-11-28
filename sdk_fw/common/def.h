@@ -16,7 +16,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-
+#include "err_code.h"
 #include "util.h"
 
 enum uart_type
