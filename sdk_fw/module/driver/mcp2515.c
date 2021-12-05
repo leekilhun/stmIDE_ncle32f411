@@ -45,8 +45,6 @@ static const uint8_t RXB1CTRL_FILHIT = 0x01;
 const uint8_t spi_ch = _DEF_SPI1;
 
 
-
-
 static bool is_init[MCP2515_MAX_CH];
 static McpBaud is_baud[MCP2515_MAX_CH];
 
@@ -86,6 +84,15 @@ void mcp2515csPinWrite(uint8_t ch, bool value)
 bool mcp2515Init(void)
 {
   bool ret = true;
+
+  bool is_init_all = true;
+  for (int ch=0; ch<MCP2515_MAX_CH; ch++ )
+  {
+    is_init_all &= is_init[ch];
+  }
+
+  if (is_init_all)
+    return is_init_all;
 
   ret = spiBegin(spi_ch);
   spiAttachTxInterrupt(spi_ch, TransferDoneISR);

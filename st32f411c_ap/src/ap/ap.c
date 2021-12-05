@@ -26,6 +26,7 @@ void apInit(void)
   count = 0;
   //uartOpen(_DEF_UART1, 115200);
   cliOpen(_DEF_UART1, 57600);
+  canOpen(_DEF_CAN1, CAN_NORMAL, CAN_CLASSIC, CAN_500K, CAN_500K);
   ledOff(_DEF_LED1);
 }
 

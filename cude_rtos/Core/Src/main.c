@@ -123,6 +123,7 @@ int main(void)
   MX_I2C1_Init();
   MX_SPI2_Init();
   MX_I2C2_Init();
+  MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
 
   printf("\n\r UART Printf Example: retarget the C library printf function to the UART\n\r");
