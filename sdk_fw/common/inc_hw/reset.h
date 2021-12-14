@@ -22,6 +22,7 @@ bool resetInit(void);
 uint32_t resetGetCount(void);
 void resetToBoot(uint32_t timeout);
 void resetToSysBoot(void);
+void resetLog(void);
 
 #endif
 

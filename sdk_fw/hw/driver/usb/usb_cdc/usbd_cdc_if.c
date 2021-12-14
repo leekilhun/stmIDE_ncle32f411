@@ -15,7 +15,11 @@
   *                             www.st.com/SLA0044
   *
   ******************************************************************************
+  * @ addition
+  *   debug for cdcIfWrite  2021.12.15
   */
+
+
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc_if.h"
@@ -105,7 +109,7 @@ uint32_t cdcIfWrite(uint8_t *p_data, uint32_t length)
   while(sent_len < length)
   {
     buf_len = (q_tx.len - qbufferAvailable(&q_tx)) - 1;
-    tx_len = length;
+    tx_len = length - sent_len;
 
     if (tx_len > buf_len)
     {

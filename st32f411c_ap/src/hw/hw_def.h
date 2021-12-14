@@ -10,13 +10,19 @@
 
 #include "bsp.h"
 
-
+#define _DEF_FIRMWATRE_VERSION    "V211215R0"
+#define _DEF_BOARD_NAME           "Board Name"
 
 #define _USE_HW_FLASH
 
 
 #define _USE_HW_RTC
 #define _USE_HW_RESET
+
+#define _HW_DEF_RTC_BOOT_RESET      RTC_BKP_DR3
+#define _HW_DEF_RTC_BOOT_MODE       RTC_BKP_DR4
+#define _HW_DEF_RTC_RESET_SRC       RTC_BKP_DR5
+
 
 #define _USE_HW_LED
 #define      HW_LED_MAX_CH          1
@@ -52,7 +58,7 @@
 #define      HW_CLI_LINE_HIS_MAX    4
 #define      HW_CLI_LINE_BUF_MAX    64
 
-#define _USE_HW_CAN
+//#define _USE_HW_CAN
 #define      HW_CAN_MAX_CH          1
 #define      HW_CAN_MSG_RX_BUF_MAX  16
 

@@ -17,20 +17,33 @@ bool hwInit(void)
 
   ret &= bspInit();
 
-  ret &= rtcInit();
   ret &= resetInit();
   ret &= cliInit();
   ret &= ledInit();
   ret &= gpioInit();
-  ret &= uartInit();
 
   ret &= logInit();
+  ret &= uartInit();
+  uartOpen(_DEF_UART1, 57600);
+
+  logOpen(_DEF_UART1, 57600);
+  logPrintf("\r\n[ Firmware Begin... ]\r\n");
+  logPrintf("Booting..Name \t\t: %s\r\n", _DEF_BOARD_NAME);
+  logPrintf("Booting..Ver  \t\t: %s\r\n", _DEF_FIRMWATRE_VERSION);
+  logPrintf("Sys Clk       \t\t: %d Mhz\r\n", HAL_RCC_GetSysClockFreq()/1000000);
+
+
+  ret &= rtcInit();
+
+
+  logBoot(false);
+
   ret &= buttonInit();
   ret &= flashInit();
 
   ret &= spiInit();
   ret &= i2cInit();
-  ret &= canInit();
+  //ret &= canInit();
 
   return ret;
 }

@@ -64,6 +64,12 @@ bool resetInit(void)
   return ret;
 }
 
+
+void resetLog(void)
+{
+
+}
+
 uint32_t resetGetCount(void)
 {
   return reset_count;

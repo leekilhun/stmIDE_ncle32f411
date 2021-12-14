@@ -143,14 +143,6 @@ int main(void)
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
   HAL_Delay(100);
 
-  for (int i=0x00; i<= 0x7F; i++)
-  {
-    if (i2cIsDeviceReady(i) == true)
-    {
-      printf("I2C CH%d Addr 0x%X : OK\n", 1, i);
-    }
-  }
-
 
   uint32_t num = 0 ;
   while (1)
@@ -227,20 +219,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   HAL_UART_Receive_IT(&huart2, &rec_data, 1);*/
   //HAL_UART_Receive_DMA(&huart2,&rec_data,256);
 }
-
-
-
-bool i2cIsDeviceReady(uint8_t dev_addr)
-{
-
-  if (HAL_I2C_IsDeviceReady(&hi2c1, dev_addr << 1, 10, 10) == HAL_OK)
-  {
-    return true;
-  }
-
-  return false;
-}
-
 
 
 

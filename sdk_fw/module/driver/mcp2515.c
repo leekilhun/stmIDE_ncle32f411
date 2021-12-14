@@ -17,7 +17,7 @@
 
 
 #define _PIN_DEF_MCP2515_CS_CH0    1
-
+//#define _PIN_DEF_MCP2515_CS_CH1    5
 
 static const uint8_t MCP_SIDH = 0;
 static const uint8_t MCP_SIDL = 1;
@@ -44,6 +44,15 @@ static const uint8_t RXB1CTRL_FILHIT = 0x01;
 
 const uint8_t spi_ch = _DEF_SPI1;
 
+typedef struct
+{
+  GPIO_TypeDef *port;
+  uint32_t      pin;
+  uint8_t       mode;
+  GPIO_PinState on_state;
+  GPIO_PinState off_state;
+  bool          init_value;
+} gpio_tbl_t;
 
 static bool is_init[MCP2515_MAX_CH];
 static McpBaud is_baud[MCP2515_MAX_CH];
@@ -71,7 +80,7 @@ static void TransferDoneISR(void)
 
 void mcp2515csPinWrite(uint8_t ch, bool value)
 {
-  if ( ch >= MCP2515_MAX_CH )
+  if ( ch >= _MODULE_MCP2515_MAX_CH )
     return;
 
   if ( ch==_DEF_CAN1)
@@ -85,14 +94,14 @@ bool mcp2515Init(void)
 {
   bool ret = true;
 
-  bool is_init_all = true;
+  /*bool is_init_all = true;
   for (int ch=0; ch<MCP2515_MAX_CH; ch++ )
   {
     is_init_all &= is_init[ch];
   }
 
   if (is_init_all)
-    return is_init_all;
+    return is_init_all;*/
 
   ret = spiBegin(spi_ch);
   spiAttachTxInterrupt(spi_ch, TransferDoneISR);
@@ -147,8 +156,8 @@ bool mcp2515Init(void)
     }
   }
 
-  mcp2515SetMode(_DEF_CAN1, MCP_MODE_NORMAL);
-  mcp2515SetBaud(_DEF_CAN1, MCP_BAUD_500K);
+  mcp2515SetMode(_DEF_CAN1, MCP_MODE_LOOPBACK);
+  mcp2515SetBaud(_DEF_CAN1, MCP_BAUD_125K);
 
 #ifdef _USE_HW_CLI
   cliAdd("mcp2515", cliMCP2515);
