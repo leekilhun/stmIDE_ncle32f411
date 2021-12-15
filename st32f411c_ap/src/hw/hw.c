@@ -34,7 +34,7 @@ bool hwInit(void)
 
 
   ret &= rtcInit();
-
+  ret &= adcInit();
 
   logBoot(false);
 

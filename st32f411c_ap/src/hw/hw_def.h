@@ -69,6 +69,9 @@
 #define _USE_HW_I2C
 #define      HW_I2C_MAX_CH          2
 
+#define _USE_HW_ADC
+#define      HW_ADC_MAX_CH          1
+
 
 
 

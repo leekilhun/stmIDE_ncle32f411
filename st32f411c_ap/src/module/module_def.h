@@ -12,8 +12,8 @@
 #include "hw.h"
 
 #define _USE_MODULE_MCP2515
-#define     _MODULE_MCP2515_CH1         0
 #define     _MODULE_MCP2515_MAX_CH      1
+#define     _MODULE_MCP2515_CH1         0
 
 #define _USE_MODULE_MCP23017
 #define     _MODULE_MCP23017_MAX_CH     1

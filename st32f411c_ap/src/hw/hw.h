@@ -24,6 +24,7 @@
 #include "log.h"
 #include "flash.h"
 #include "gpio.h"
+#include "adc.h"
 
 bool hwInit(void);
 

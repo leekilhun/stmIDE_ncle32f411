@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "adc.h"
 #include "dma.h"
 #include "i2c.h"
 #include "rtc.h"
@@ -124,6 +125,7 @@ int main(void)
   MX_SPI2_Init();
   MX_I2C2_Init();
   MX_SPI3_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
 
   printf("\n\r UART Printf Example: retarget the C library printf function to the UART\n\r");
